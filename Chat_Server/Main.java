@@ -1,4 +1,3 @@
-
 /*
   css파일에서 GUI설정 가능
  */
@@ -32,6 +31,7 @@ public class Main extends Application {
 	public static Vector<Client> clients = new Vector<Client>();
 	
 	ServerSocket serverSocket;
+	TextArea textArea;
 	
 	// 서버를 구동시켜서 클라이언트의 연결을 기다리는 메소드
 	public void startServer(String IP,int port)
@@ -56,6 +56,10 @@ public class Main extends Application {
 					try {
 						Socket socket = serverSocket.accept();
 						clients.add(new Client(socket));   //클라이언트 배열에 새롭게 접속한 클라이언트 추가시킴
+						 Platform.runLater(() -> {
+		                     String message = String.format("%s 가 입장했습니다.", socket.getRemoteSocketAddress().toString());
+		                     textArea.appendText(message);
+		                  });
 						System.out.println("[클라이언트 접속]"
 								+ socket.getRemoteSocketAddress()
 								+ ": " + Thread.currentThread().getName());
@@ -103,7 +107,7 @@ public class Main extends Application {
 		BorderPane root = new BorderPane();  //하나의 레이아웃으로 다른 디자인 요소를 담음
 		root.setPadding(new Insets(5));
 		
-		TextArea textArea = new TextArea();
+	    textArea = new TextArea();
 		textArea.setEditable(false);   //수정 불가능
 		textArea.setFont(new Font("나눔고딕", 15));
 		root.setCenter(textArea);
