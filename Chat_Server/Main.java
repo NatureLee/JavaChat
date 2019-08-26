@@ -57,7 +57,7 @@ public class Main extends Application {
 						Socket socket = serverSocket.accept();
 						clients.add(new Client(socket));   //클라이언트 배열에 새롭게 접속한 클라이언트 추가시킴
 						 Platform.runLater(() -> {
-		                     String message = String.format("%s 가 입장했습니다.", socket.getRemoteSocketAddress().toString());
+		                     String message = String.format("%s 가 입장했습니다.\n", socket.getRemoteSocketAddress().toString());
 		                     textArea.appendText(message);
 		                  });
 						System.out.println("[클라이언트 접속]"

@@ -17,14 +17,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.*;
 
 public class Main extends Application {
 	
@@ -105,21 +100,99 @@ public class Main extends Application {
     //로그인 씬
     public void LoginScene() {
     	
-    	window = new Stage();
+    window = new Stage();
+    	GridPane logGrid = new GridPane();
+    	logGrid.setAlignment(Pos.CENTER);
+    	logGrid.setVgap(10);
+    	logGrid.setHgap(10);
+    	logGrid.setPadding(new Insets(10));
+    	
+    	Text topTxt = new Text("Login");
+    	topTxt.setFont(Font.font("나눔 고딕",FontWeight.LIGHT,30));
+    	logGrid.add(topTxt, 0, 0);   	
         
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        
-        Button loginBtn = new Button("login");
-        grid.add(loginBtn, 0, 0);
-        
-        loginBtn.setOnAction(event -> {
-           window.setScene(chatScene);
-        });
-        logScene = new Scene(grid, 760, 480);
+    	// id
+    	Label idLb = new Label("ID");
+    	TextField idField = new TextField();
+    	idField.setPromptText("ID");
+      	logGrid.add(idLb, 0, 3);
+    	logGrid.add(idField, 0, 4);
+    	
+    	//pw
+    	Label pwLb = new Label("Password");
+    	PasswordField pwField = new PasswordField();
+    	pwField.setPromptText("Password");
+      	logGrid.add(pwLb, 0, 5);
+    	logGrid.add(pwField, 0, 6);
+    	
+    	// buttons
+    	BorderPane btnPane = new BorderPane();
+   
+    	Button logBtn = new Button("Login");
+      	Button signBtn = new Button("Sign Up");
+      	btnPane.setLeft(logBtn);
+      	btnPane.setCenter(signBtn);      	
+      	
+    	logGrid.add(btnPane, 0, 8);;
+    	
+    	logBtn.setOnAction(event->{
+    		window.setScene(chatScene);
+    	});
+    	
+    	signBtn.setOnAction(event->{
+    		window.setScene(signupScene);
+    	});
+    	
+        logScene = new Scene(logGrid, 760, 480);
         window.setScene(logScene);
     }
+
+    //회원가입 씬
+    public void SignUpScene() {
+    	
+    	window = new Stage();
+    	GridPane suGrid = new GridPane();
+    	suGrid.setAlignment(Pos.CENTER);
+    	suGrid.setVgap(10);
+    	suGrid.setHgap(10);
+    	suGrid.setPadding(new Insets(10));
+    	
+    	Text topTxt = new Text("Sign Up");
+    	topTxt.setFont(Font.font("나눔 고딕",FontWeight.LIGHT,30));
+    	suGrid.add(topTxt, 0, 0);   	
+        
+    	//id
+    	Label idLb = new Label("ID 생성");
+    	TextField idField = new TextField();
+    	idField.setPromptText("ID");
+    	suGrid.add(idLb, 0, 3);
+    	suGrid.add(idField, 0, 4);
+    	
+    	//pw
+    	Label pwLb = new Label("Password 생성");
+    	TextField pwField = new TextField();
+    	pwField.setPromptText("Password");
+    	suGrid.add(pwLb, 0, 5);
+    	suGrid.add(pwField, 0, 6);
+    	
+    	// buttons
+    	BorderPane btnPane = new BorderPane();
+    	   
+    	Button backBtn = new Button("Back");
+      	Button signBtn = new Button("Sign Up");
+      	btnPane.setCenter(signBtn);
+      	btnPane.setRight(backBtn);      	
+      	
+      	suGrid.add(btnPane, 0, 8);
     
+    	backBtn.setOnAction(event->{
+    		window.setScene(logScene);
+    	});
+    	
+        signupScene = new Scene(suGrid, 760, 480);
+        window.setScene(signupScene);
+    }    
+
     // 채팅씬
     public void ChatScene() {
     	window = new Stage();
@@ -132,16 +205,17 @@ public class Main extends Application {
 		
 		//UserName text
 		TextField userName = new TextField();
+		Text nick = new Text("NickName : ");
 		userName.setPrefWidth(150);
 		userName.setPromptText("닉네임을 입력하세요.");
 		HBox.setHgrow(userName, Priority.ALWAYS);
 		
 		//IP,port text
-		TextField IPText = new TextField("127.0.0.1");
+	  /*TextField IPText = new TextField("127.0.0.1");
 		TextField portText = new TextField("9876");
-		portText.setPrefWidth(80);
+		portText.setPrefWidth(80);*/
 		
-		hbox.getChildren().addAll(userName,IPText,portText);  //textBox에 실질적으로 textField추가
+		hbox.getChildren().addAll(nick,userName);//,IPText,portText);  //textBox에 실질적으로 textField추가
 		root.setTop(hbox);   //hbox를 젤 위에둠
 		
 		textArea = new TextArea();  //초기화 시켜줘야한대 
@@ -151,7 +225,7 @@ public class Main extends Application {
 		//입력창
 		TextField input = new TextField();
 		input.setPrefWidth(Double.MAX_VALUE);
-		input.setDisable(true);      //비활성화
+		//input.setDisable(true);      //비활성화
 		
 		//처음 send (이거 안하면 처음 send가 안됨)
 		input.setOnAction(event->{
@@ -162,7 +236,7 @@ public class Main extends Application {
 		
 		//보내기 버튼
 		Button sendButton = new Button("보내기");
-		sendButton.setDisable(true);
+		//sendButton.setDisable(true);
 		
 		sendButton.setOnAction(event->{
 			send(userName.getText() + ": " + input.getText() + "\n");
@@ -170,41 +244,8 @@ public class Main extends Application {
 			input.requestFocus();  //다시 메세지 보낼 수 있게 focus를 입력창에 맞춤
 		});
 		
-		//연결 버튼
-		//connButton 누르면 클라 시작
-		Button connButton = new Button("접속하기");
-		connButton.setOnAction(even->{
-			if(connButton.getText().equals("접속하기")) {
-				//기본적으로 포트는 9876으로 두고 사용자가 port번호 입력하면 그 번호로 바뀔 수 있도록 해놓음
-				int port = 9876;
-				try {
-					port = Integer.parseInt(portText.getText());    //정수로 바꾸기
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-				
-				startClient(IPText.getText(),port);
-				//UI변경 필요할 때 사용
-				Platform.runLater(()->{
-					textArea.appendText("[ 채팅방 접속 ]\n");
-				});
-				connButton.setText("종료하기");
-				input.setDisable(false);
-				sendButton.setDisable(false);
-				input.requestFocus();
-			} else {
-				stopClient();
-				Platform.runLater(()->{
-					textArea.appendText("[ 채팅방 퇴장 ]\n");
-				});
-				connButton.setText("접속하기");
-				input.setDisable(true);
-				sendButton.setDisable(true);
-			}
-		});
 		
 		BorderPane pane = new BorderPane();
-		pane.setLeft(connButton);
 		pane.setCenter(input);
 		pane.setRight(sendButton);
 		
@@ -214,14 +255,16 @@ public class Main extends Application {
 		window.setScene(chatScene);
 		window.setOnCloseRequest(event-> stopClient());    //닫으면 실행
 		
-		connButton.requestFocus();	    	
+		input.requestFocus();
     } 
     
     //실제로 프로그램을 동작시키는 메소드
 	@Override
 	public void start(Stage primaryStage) {
+                        startClient(new String("127.0.0.1"),9876);  //시작하자마자 서버 연결
 		// Draw Scene
 	      ChatScene();
+                  SignUpScene();
 	      LoginScene();
 	      
 	      window.show();
